@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-6 px-4 mt-auto">
+    <footer className="bg-gray-900 text-gray-300 py-6 px-4 mt-auto w-full">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-center sm:text-left text-sm">
           © 2026 Maktab Learning Management System

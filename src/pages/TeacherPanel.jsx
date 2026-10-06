@@ -171,7 +171,8 @@ export default function TeacherPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 sm:py-8">
+    <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 sm:py-8 flex flex-col">
+      <div className="flex-1">
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-8 sm:mb-12 flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-8">
         <div className="flex-1 min-w-0">
@@ -430,6 +431,7 @@ export default function TeacherPanel() {
           onClose={() => setSelectedRecording(null)}
         />
       )}
+      </div>
 
       <Footer />
     </div>
