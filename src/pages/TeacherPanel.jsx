@@ -93,10 +93,7 @@ export default function TeacherPanel() {
   useEffect(() => {
     loadRecordings();
     loadStudents();
-    loadAttendance();
-  }, []);
 
-  function loadAttendance() {
     const today = new Date();
     const thirtyDaysAgo = new Date(today);
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -106,6 +103,12 @@ export default function TeacherPanel() {
 
     setAttendanceStartDate(start);
     setAttendanceEndDate(end);
+    loadAttendance(start, end);
+  }, []);
+
+  function loadAttendance(startDate, endDate) {
+    const start = startDate || attendanceStartDate;
+    const end = endDate || attendanceEndDate;
 
     client
       .get(`/attendance/report?startDate=${start}&endDate=${end}`)
