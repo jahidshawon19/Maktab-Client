@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import client from "../api/client";
 import MediaPlayer from "../components/MediaPlayer";
+import Footer from "../components/Footer";
 
 function formatSize(bytes) {
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
@@ -294,6 +295,8 @@ export default function StudentPanel() {
           onClose={() => setSelectedRecording(null)}
         />
       )}
+
+      <Footer />
     </div>
   );
 }

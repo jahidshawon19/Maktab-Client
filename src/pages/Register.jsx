@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Footer from "../components/Footer";
 import heroImg from "../assets/hero.png";
 
 export default function Register() {
@@ -28,7 +29,8 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-auth p-4 sm:p-6 animate-fadeIn relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-gradient-auth animate-fadeIn relative overflow-hidden">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
       {/* Video Background */}
       <video
         className="absolute inset-0 w-full h-full object-cover opacity-15"
@@ -151,6 +153,8 @@ export default function Register() {
           </p>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }
