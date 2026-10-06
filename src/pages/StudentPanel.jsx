@@ -297,7 +297,6 @@ export default function StudentPanel() {
         />
       )}
       </div>
-
       <Footer />
     </div>
   );

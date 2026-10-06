@@ -432,7 +432,6 @@ export default function TeacherPanel() {
         />
       )}
       </div>
-
       <Footer />
     </div>
   );
