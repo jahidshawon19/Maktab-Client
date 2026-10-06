@@ -6,7 +6,8 @@ export default function MediaPlayer({ recording, onClose }) {
 
   const recordingId = recording._id || recording.id;
   const token = localStorage.getItem('token');
-  const streamUrl = `http://localhost:4000/api/recordings/${recordingId}/stream?token=${encodeURIComponent(token || '')}`;
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+  const streamUrl = `${apiBase}/recordings/${recordingId}/stream?token=${encodeURIComponent(token || '')}`;
   const isAudio = recording.mimeType?.startsWith('audio/');
   const isVideo = recording.mimeType?.startsWith('video/');
 
