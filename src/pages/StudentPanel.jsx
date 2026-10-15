@@ -18,16 +18,8 @@ function formatDateOnly(iso) {
   return new Date(iso).toLocaleDateString();
 }
 
-async function downloadRecording(id, filename) {
-  const res = await client.get(`/recordings/${id}/download`, {
-    responseType: "blob",
-  });
-  const url = URL.createObjectURL(res.data);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+function downloadRecording(_id, _filename, cloudinaryUrl) {
+  window.open(cloudinaryUrl, "_blank");
 }
 
 function RecordingItem({ recording, onPlay }) {
@@ -47,7 +39,7 @@ function RecordingItem({ recording, onPlay }) {
           ▶ Play
         </button>
         <button
-          onClick={() => downloadRecording(recording.id || recording._id, recording.originalName)}
+          onClick={() => downloadRecording(recording.id || recording._id, recording.originalName, recording.cloudinaryUrl)}
           className="text-blue-500 font-semibold text-xs px-4 py-2 bg-blue-50 rounded hover:bg-blue-100 hover:text-blue-700 transition-colors"
         >
           Download
@@ -103,14 +95,37 @@ export default function StudentPanel() {
     setLoading(true);
     setMessage(null);
 
-    const formData = new FormData();
-    formData.append("title", title || file.name);
-    formData.append("file", file);
-
     try {
-      await client.post("/recordings", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      // Step 1: Upload directly to Cloudinary
+      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+      formData.append("folder", "maktab/recordings");
+
+      const cloudRes = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`,
+        { method: "POST", body: formData }
+      );
+
+      if (!cloudRes.ok) {
+        throw new Error("Cloudinary upload failed");
+      }
+
+      const cloudData = await cloudRes.json();
+
+      // Step 2: Save metadata to our server
+      await client.post("/recordings", {
+        title: title || file.name,
+        originalName: file.name,
+        mimeType: file.type,
+        size: file.size,
+        cloudinaryUrl: cloudData.secure_url,
+        cloudinaryPublicId: cloudData.public_id,
       });
+
       setTitle("");
       setFile(null);
       setMessage({ type: "success", text: "Recording uploaded successfully" });
@@ -119,7 +134,7 @@ export default function StudentPanel() {
     } catch (err) {
       setMessage({
         type: "error",
-        text: err.response?.data?.message || "Upload failed",
+        text: err.response?.data?.message || err.message || "Upload failed",
       });
     } finally {
       setLoading(false);

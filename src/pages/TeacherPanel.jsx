@@ -18,16 +18,8 @@ function formatDateOnly(iso) {
   return new Date(iso).toLocaleDateString();
 }
 
-async function downloadRecording(id, filename) {
-  const res = await client.get(`/recordings/${id}/download`, {
-    responseType: "blob",
-  });
-  const url = URL.createObjectURL(res.data);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+function downloadRecording(_id, _filename, cloudinaryUrl) {
+  window.open(cloudinaryUrl, "_blank");
 }
 
 async function downloadAttendanceReport(startDate, endDate) {
@@ -65,7 +57,7 @@ function RecordingItem({ recording, showStudent, onPlay }) {
           ▶ Play
         </button>
         <button
-          onClick={() => downloadRecording(recording.id || recording._id, recording.originalName)}
+          onClick={() => downloadRecording(recording.id || recording._id, recording.originalName, recording.cloudinaryUrl)}
           className="text-blue-500 font-semibold text-xs px-4 py-2 bg-blue-50 rounded hover:bg-blue-100 hover:text-blue-700 transition-colors"
         >
           Download

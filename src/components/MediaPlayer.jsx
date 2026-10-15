@@ -1,19 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function MediaPlayer({ recording, onClose }) {
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  const recordingId = recording._id || recording.id;
-  const token = localStorage.getItem('token');
-  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
-  const streamUrl = `${apiBase}/recordings/${recordingId}/stream?token=${encodeURIComponent(token || '')}`;
+  const mediaUrl = recording.cloudinaryUrl;
   const isAudio = recording.mimeType?.startsWith('audio/');
   const isVideo = recording.mimeType?.startsWith('video/');
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -38,17 +30,12 @@ export default function MediaPlayer({ recording, onClose }) {
         <div className="p-6 bg-gray-50">
           {isVideo ? (
             <video
-              key={streamUrl}
+              key={mediaUrl}
               controls
               className="w-full bg-black rounded-lg"
-              onError={(e) => {
-                console.error('Video error:', e);
-                setError(`Failed to load video: ${e.target.error?.message || 'Unknown error'}`);
-              }}
-              onLoadStart={() => setIsLoading(true)}
-              onCanPlay={() => setIsLoading(false)}
+              onError={() => setError('Failed to load video')}
             >
-              <source src={streamUrl} type={recording.mimeType} />
+              <source src={mediaUrl} type={recording.mimeType} />
               Your browser does not support the video tag.
             </video>
           ) : isAudio ? (
@@ -57,17 +44,12 @@ export default function MediaPlayer({ recording, onClose }) {
                 <div className="text-6xl opacity-50">🎵</div>
               </div>
               <audio
-                key={streamUrl}
+                key={mediaUrl}
                 controls
                 className="w-full"
-                onError={(e) => {
-                  console.error('Audio error:', e);
-                  setError(`Failed to load audio: ${e.target.error?.message || 'Unknown error'}`);
-                }}
-                onLoadStart={() => setIsLoading(true)}
-                onCanPlay={() => setIsLoading(false)}
+                onError={() => setError('Failed to load audio')}
               >
-                <source src={streamUrl} type={recording.mimeType} />
+                <source src={mediaUrl} type={recording.mimeType} />
                 Your browser does not support the audio tag.
               </audio>
             </div>
@@ -76,16 +58,9 @@ export default function MediaPlayer({ recording, onClose }) {
               <p className="text-gray-600">Unsupported media type: {recording.mimeType}</p>
             </div>
           )}
-          {isLoading && (
-            <div className="mt-4 text-center text-gray-600">
-              Loading...
-            </div>
-          )}
 
           {error && (
-            <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-lg text-sm">
-              {error}
-            </div>
+            <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-lg text-sm">{error}</div>
           )}
         </div>
 
