@@ -4,16 +4,5 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "env": {
-    "VITE_API_URL": {
-      "description": "Backend API URL, e.g. https://your-server.vercel.app/api"
-    },
-    "VITE_CLOUDINARY_CLOUD_NAME": {
-      "description": "Your Cloudinary cloud name"
-    },
-    "VITE_CLOUDINARY_UPLOAD_PRESET": {
-      "description": "Your Cloudinary unsigned upload preset name"
-    }
-  }
+  ]
 }
